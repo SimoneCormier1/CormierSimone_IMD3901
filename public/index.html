@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>Simone Cormier - Assignment 2</title>
+
+      <meta name="description" content="Simone Cormier - Assignment 2">
+      <script src="/js/aframe.min.js"></script>
+      <script src="/js/add-lantern.js"></script>
+      <script src="/js/add-mountains.js"></script>
+      <script src="/js/delete-lantern.js"></script>
+      <script src="/js/delete-mountains.js"></script>
+      <script src="/js/scaling-effect.js"></script>
+      <script src="/js/aframe-environment-component.min.js"></script>
+      <script src="https://unpkg.com/super-hands@2.1.0/dist/super-hands.min.js"></script>
+      <script src="js/aframe-physics-system.js"></script>
+        
+      <link rel="stylesheet" href="/css/user-gesture.css">
+      <script>
+        AFRAME.registerComponent('start-experience', {
+          init: function () {
+            console.log('scene loaded');
+            document.querySelector('#user-gesture-button').style.display='block';
+          }
+        });
+        
+        const startExperience = function() {
+          document.querySelector('#user-gesture-overlay').style.display='none';
+          
+          //start all ambient music
+          const ambientSounds = document.querySelectorAll('.ambient-music');
+          ambientSounds.forEach(function(soundEntity) {
+            soundEntity.components.sound.playSound();
+          });
+        }
+      </script>
+    </head>
+
+    <body>
+      <div id="user-gesture-overlay">
+        <div class="center">
+          <button id="user-gesture-button" onclick="startExperience();">enter experience</button>
+        </div>
+      </div>
+
+      <a-scene physics="debug: false;" start-experience>
+
+      <a-assets timeout="10000">
+          <audio id="background-music" src="/assets/background-music.mp3" preload="auto" crossorigin="anonymous"></audio>
+          <audio id="click-sound" src="/assets/click-sound.wav" preload="auto" crossorigin="anonymous"></audio>
+          <a-asset-item id="lantern_model"     response-type="arraybuffer" src="/assets/scene.glb"></a-asset-item>
+      </a-assets>
+
+        <a-entity progressive-controls></a-entity>
+
+        <a-entity camera wasd-controls look-controls position="0 1.6 0">
+          <a-entity light="type:spot; intensity:1.4; castShadow:true; shadowBias:-0.0005; angle:40; penumbra:0.3; " position="0.5 -0.5 0" ></a-entity>
+          <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive"></a-entity>
+        </a-entity>
+                
+        <a-entity class="ambient-music" sound="src:#background-music; autoplay:false;"></a-entity>
+
+        <!--green button = make candles huge)-->
+        <a-entity class="button interactive" scaling-effect="duration:60000;" position="-1 0.6 -2" geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:rgb(255, 100, 100)"
+        animation__mouseenter="property:material.color; type:color; to:rgb(255, 0, 0); startEvents:mouseenter; dur:200"
+        animation__mouseleave="property:material.color; type:color; to:rgb(255, 100, 100); startEvents:mouseleave; dur:200"
+        animation__click="property:position; from:-1 0.55 -2; to:-1 0.6 -2; startEvents:click; dur:300"
+        sound="src: #click-sound; on:click"></a-entity>
+        <a-entity text="value:Scale Candles; color:black; font:roboto; width:0.4; align:center; anchor:left; baseline:top; wrapCount:8;" position="-1.2 0.5 -1.7" ></a-entity>
+        <a-entity position="-1 0.3 -2" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:rgb(255, 255, 255)"></a-entity>
+
+
+        <!--green button = add lantern -->
+        <a-entity class="button interactive" add-lantern="duration:60000;"  position="-0.5 0.6 -2" geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:#00FF00"
+        animation__mouseenter="property:material.color; type:color; to:#009900; startEvents:mouseenter; dur:200"
+        animation__mouseleave="property:material.color; type:color; to:#00FF00; startEvents:mouseleave; dur:200"
+        animation__click="property:position; from:-0.5 0.55 -2; to:-0.5 0.6 -2; startEvents:click; dur:300"
+        sound="src: #click-sound; on:click"></a-entity>
+        <a-entity text="value:Add Lantern; color:black; font:roboto; width:0.4; align:center; anchor:left; baseline:top; wrapCount:6;" position="-0.7 0.5 -1.7" ></a-entity>
+        <a-entity position="-0.5 0.3 -2" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:rgb(255, 255, 255)"></a-entity>
+
+
+        <!--yellow button = add all mountains -->
+        <a-entity class="button interactive" add-mountains="duration:60000;"  position="0.5 0.6 -2" geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:#FFFF33"
+        animation__mouseenter="property:material.color; type:color; to:#FF9900; startEvents:mouseenter; dur:200"
+        animation__mouseleave="property:material.color; type:color; to:#FFFF33; startEvents:mouseleave; dur:200"
+        animation__click="property:position; from:0.5 0.55 -2; to:0.5 0.6 -2; startEvents:click; dur:300"
+        sound="src: #click-sound; on:click"></a-entity>
+        <a-entity text="value:Add Mountains; color:black; font:roboto; width:0.4; align:center; anchor:left; baseline:top; wrapCount:9;" position="0.3 0.5 -1.7" ></a-entity>
+        <a-entity position="0.5 0.3 -2" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:rgb(255, 255, 255)"></a-entity>
+
+        <!--purple button = delete all mountains-->
+        <a-entity class="button interactive" delete-mountains="duration:60000;" position="1 0.6 -2" geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:#6a0dad"
+        animation__mouseenter="property:material.color; type:color; to:#6d00c1 ; startEvents:mouseenter; dur:200"
+        animation__mouseleave="property:material.color; type:color; to:#6a0dad; startEvents:mouseleave; dur:200"
+        animation__click="property:position; from:1 0.55 -2; to:1 0.6 -2; startEvents:click; dur:300"
+        sound="src: #click-sound; on:click"></a-entity>
+        <a-entity text="value:Delete Mountains; color:black; font:roboto; width:0.4; align:center; anchor:left; baseline:top; wrapCount:9;" position="0.8 0.5 -1.7" ></a-entity>
+        <a-entity position="1 0.3 -2" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:rgb(255, 255, 255)"></a-entity>
+
+        <!--creating candles-->
+        <a-entity id="candle-group" visible="true">
+            <a-entity dynamic-body grabbable class="interaction" position="0 0.25 -15.0"    geometry="primitive:cylinder; radius:0.12; height:0.3;" material= "color:#ffea00; opacity:0.7;" shadow="cast:true; receive:true;">"</a-entity>
+            <a-entity dynamic-body grabbable class="interaction" position="5 0.25 -13.0" geometry="primitive:cylinder; radius:0.12; height:0.3;" material= "color:#ffea00; opacity:0.7;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity dynamic-body grabbable class="interaction" position="2 0.25 -4.0"  geometry="primitive:cylinder; radius:0.12; height:0.3;" material= "color:#ffea00; opacity:0.7;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity dynamic-body grabbable class="interaction" position="3 0.25 -2.0" geometry="primitive:cylinder; radius:0.12; height:0.3;" material= "color:#ffea00; opacity:0.7;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity dynamic-body grabbable class="interaction" position="-7 0.25 -15.0"  geometry="primitive:cylinder; radius:0.12; height:0.3;" material= "color:#ffea00; opacity:0.7;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity dynamic-body grabbable class="interaction" position="-5 0.25 -5.0"  geometry="primitive:cylinder; radius:0.12; height:0.3;" material= "color:#ffea00; opacity:0.7;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity dynamic-body grabbable class="interaction" position="0 0.25 -10.0"  geometry="primitive:cylinder; radius:0.12; height:0.3;" material= "color:#ffea00; opacity:0.7;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity dynamic-body grabbable class="interaction" position="-1 0.25 -13.0"  geometry="primitive:cylinder; radius:0.12; height:0.3;" material= "color:#ffea00; opacity:0.7;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity dynamic-body grabbable class="interaction" position="3 0.25 -10.0"  geometry="primitive:cylinder; radius:0.12; height:0.3;" material= "color:#ffea00; opacity:0.7;" shadow="cast:true; receive:true;"></a-entity>
+        </a-entity>
+
+        <!--creating mountains-->
+        <a-entity id="mountain-group" visible="false">
+            <a-entity class="background" position="-12 0 -6" scale="2 5.7 2" geometry="primitive: octahedron" material= "color:#3d0c02" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-10 0 -8" scale="2 5.7 2" geometry="primitive: octahedron" material= "color:#3d0c02" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-8 0 -10" scale="2 4 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-6 0 -12" scale="1.2 4.3 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-4 0 -14" scale="1.6 6 3" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-2 0 -16" scale="1.8 3.5 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="0 0 -17" scale="1 2 1.2" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="2 0 -16" scale="1.1 2.8 1.4" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="4 0 -14" scale="1.8 6.2 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="6 0 -12" scale="1.8 6.7 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="8 0 -10" scale="1.8 6.7 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="10 0 -8" scale="1.8 6.7 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="12 0 -6" scale="1.8 6.7 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-12 0 2" scale="2 5.7 2" geometry="primitive: octahedron" material= "color:#3d0c02" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-12 0 -2" scale="2 5.7 2" geometry="primitive: octahedron" material= "color:#3d0c02" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="12 0 2" scale="2 4 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="12 0 -2" scale="1.2 4.3 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-12 0 6" scale="2 5.7 2" geometry="primitive: octahedron" material= "color:#3d0c02" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-10 0 8" scale="2 5.7 2" geometry="primitive: octahedron" material= "color:#3d0c02" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-8 0 10" scale="2 4 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-6 0 12" scale="1.2 4.3 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-4 0 14" scale="1.6 6 3" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="-2 0 16" scale="1.8 3.5 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="0 0 17" scale="1 2 1.2" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="2 0 16" scale="1.1 2.8 1.4" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="4 0 14" scale="1.8 6.2 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="6 0 12" scale="1.8 6.7 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="8 0 10" scale="1.8 6.7 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="10 0 8" scale="1.8 6.7 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+            <a-entity class="background" position="12 0 6" scale="1.8 6.7 1.5" geometry="primitive: octahedron;" material= "color:#3d0c02;" shadow="cast:true; receive:true;"></a-entity>
+        </a-entity>
+
+        <!--making base/ground-->
+        <a-entity id="box" 
+          static-body
+          position="0 -0.4 0"
+          rotation="0 0 0"
+          scaSle="1 1 1"
+          geometry="primitive:box; width:40.0, height:1.0; depth:40.0;"
+          material="color:#AAAAAA;"
+          shadow="cast:false; receive:true;">
+        </a-entity>
+        
+        <a-entity environment="preset:starry"></a-entity>
+      </a-scene>
+    </body>
+</html>
